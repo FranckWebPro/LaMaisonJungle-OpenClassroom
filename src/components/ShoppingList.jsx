@@ -2,28 +2,32 @@ import { useState } from 'react'
 import { plantList } from '../datas/plantList'
 import PlantItem from './PlantItem'
 import Categories from './Categories'
+import Popup from './Popup'
 import '../styles/ShoppingList.css'
 
 function ShoppingList({ cart, updateCart }) {
-	const [activeCategory, setActiveCategory] = useState('')
+	const [activeCategory, setActiveCategory] = useState([]);
+	const [plantToDisplay, setPlantToDisplay] = useState('');
+	const [isOpen, setIsOpen] = useState(false);
+
 	const categories = plantList.reduce(
 		(acc, elem) =>
 			acc.includes(elem.category) ? acc : acc.concat(elem.category),
 		[]
-	)
+	);
 
 	function addToCart(name, price) {
-		const currentPlantAdded = cart.find((plant) => plant.name === name)
+		const currentPlantAdded = cart.find((plant) => plant.name === name);
 		if (currentPlantAdded) {
 			const cartFilteredCurrentPlant = cart.filter(
 				(plant) => plant.name !== name
-			)
+			);
 			updateCart([
 				...cartFilteredCurrentPlant,
 				{ name, price, amount: currentPlantAdded.amount + 1 }
-			])
+			]);
 		} else {
-			updateCart([...cart, { name, price, amount: 1 }])
+			updateCart([...cart, { name, price, amount: 1 }]);
 		}
 	}
 
@@ -37,7 +41,7 @@ function ShoppingList({ cart, updateCart }) {
 
 			<ul className='lmj-plant-list'>
 				{plantList.map(({ id, cover, name, water, light, price, category }) =>
-					!activeCategory || activeCategory === category ? (
+					activeCategory.length === 0 || activeCategory[0] === '' || activeCategory.includes(category) ? (
 						<div key={id}>
 							<PlantItem
 								cover={cover}
@@ -45,12 +49,21 @@ function ShoppingList({ cart, updateCart }) {
 								water={water}
 								light={light}
 								price={price}
+								setPlantToDisplay={setPlantToDisplay}
+								setIsOpen={setIsOpen}
+								isOpen={isOpen}
 							/>
 							<button onClick={() => addToCart(name, price)}>Ajouter</button>
 						</div>
 					) : null
 				)}
 			</ul>
+			<Popup
+				plantToDisplay={plantToDisplay}
+				plantList={plantList}
+				setIsOpen={setIsOpen}
+				isOpen={isOpen}
+			/>
 		</div>
 	)
 }

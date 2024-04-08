@@ -1,0 +1,20 @@
+.popup {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    width: 20%;
+    height: 20%;
+    padding: 1rem;
+    background-color: antiquewhite;
+    text-align: center;
+    border-radius: 20px;
+}
+
+.closeButton {
+    padding: 0.5rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+}
